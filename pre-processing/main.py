@@ -34,7 +34,22 @@ from sklearn.preprocessing import StandardScaler
 
 sc = StandardScaler()
 x_train[:, 3:] = sc.fit_transform(x_train[:, 3:])
-x_test[:, 3:] = sc.fit_transform(x_test[:, 3:])
+x_test[:, 3:] = sc.transform(x_test[:, 3:])
 
-print(x_train)
-print(x_test)
+from sklearn.linear_model import LinearRegression
+
+model = LinearRegression()
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+
+import pickle
+
+pickle.dump(model, open('model.pkl', 'wb'))
+
+import matplotlib.pyplot as plt
+plt.scatter(x_test[:, 3], y_test, color='red')
+plt.plot(x_train[:, 3], model.predict(x_train), color='blue')
+plt.title('Plot of data')
+plt.xlabel('Age (Standardized)')
+plt.ylabel('Purchased (Encoded)')
+plt.show()
